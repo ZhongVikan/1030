@@ -153,30 +153,13 @@ function install(Renderer){const p=Renderer.prototype;
  return previousBattleCard.call(this,x,y,w,h,fill,stroke);};
  // Cache the reference silhouette at its native resolution, keeping the bevel intact.
  p.battleTitleArt=function(x,y,w,h,originalLabel){
-  const im=this.uiImage('match_info_frame');
-  if(!im)return false;
-  // The supplied wooden plaque is drawn at the requested fixed 173x55 header size.
-  const c=this.ctx;c.save();
-  c.translate(x,y);c.scale(w/720,h/267);
-  // The supplied PNG contains a checkerboard matte; clip to the wooden plaque silhouette.
-  c.beginPath();
-  c.moveTo(92,59);c.lineTo(628,59);c.bezierCurveTo(652,59,665,67,673,87);
-  c.bezierCurveTo(697,94,706,107,710,128);c.lineTo(712,135);c.lineTo(708,151);
-  c.bezierCurveTo(704,171,695,181,674,187);c.bezierCurveTo(665,207,652,214,629,214);
-  c.lineTo(88,214);c.bezierCurveTo(66,214,54,206,48,188);c.bezierCurveTo(27,182,18,170,14,151);
-  c.lineTo(11,135);c.lineTo(15,121);c.bezierCurveTo(19,103,28,94,48,87);
-  c.bezierCurveTo(55,68,68,59,92,59);c.closePath();
-  c.moveTo(74,35);c.bezierCurveTo(63,40,59,50,62,60);c.lineTo(84,57);c.bezierCurveTo(91,48,87,39,74,35);c.closePath();
-  c.moveTo(115,47);c.bezierCurveTo(101,46,90,51,85,60);c.lineTo(100,60);c.bezierCurveTo(108,57,112,52,115,47);c.closePath();
-  c.moveTo(27,72);c.bezierCurveTo(32,84,39,89,49,91);c.lineTo(60,76);c.bezierCurveTo(50,65,38,66,27,72);c.closePath();
-  c.clip();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(im,0,0,720,267,0,0,720,267);c.restore();
-  return true;
+  const im=this.uiImage('match_info_frame');if(!im)return false;const c=this.ctx;c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(im,0,0,2172,724,x,y,w,h);c.restore();return true;
  };
  const previousBattleHeader=p.header;
  p.header=function(title,back=true){if(this.runtime.scene!=='game'||back)return previousBattleHeader.call(this,title,back);
- const x=(375-173)/2,y=this.top-25,w=173,h=55;
+ const w=176,h=Math.round(w*724/2172),x=(375-w)/2,y=this.top+2-h/2;
  if(!this.battleTitleArt(x,y,w,h,title==='经典象棋 · 对局中'))return previousBattleHeader.call(this,title,back);
- this.ctx.save();this.ctx.shadowColor='#51250c';this.ctx.shadowBlur=1;this.ctx.shadowOffsetY=1;this.text(title,x+w/2,y+h/2,16,'#fff9ed','center',true);this.ctx.restore();};
+ this.ctx.save();this.ctx.shadowColor='#51250c';this.ctx.shadowBlur=1;this.ctx.shadowOffsetY=1;this.text(title,x+w/2,y+h/2,Math.min(16,w/(Array.from(title).length+1)),'#fff9ed','center',true);this.ctx.restore();};
  const previousBattlePlayer=p.player;
  p.player=function(side,name,avatar,y,captured,data,now,capturePlacement='below'){
  const red=side==='red',sy=red?1257:198,active=data.turn===side&&!data.ended&&!data.waiting;

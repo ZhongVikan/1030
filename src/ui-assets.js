@@ -132,7 +132,7 @@ module.exports={
   "v2_fusion_black_mounted_king_selected": "uiFusionPieces/piece_black_mounted_king_selected.png",
   "v2_fusion_black_chariot_king": "uiFusionPieces/piece_black_chariot_king.png",
   "v2_fusion_black_chariot_king_selected": "uiFusionPieces/piece_black_chariot_king_selected.png",
-  "match_info_frame": "uiTitle/title_frame.png",
+  "match_info_frame": "uiTitle/match_info_frame.png",
   "secondary_rules_origin": "uiRuleArt/origin-board.jpg",
   "secondary_rules_jieqi": "uiRuleArt/jieqi.jpg",
   "secondary_rules_fusion_a": "uiRuleArt/fusion_a.jpg",
