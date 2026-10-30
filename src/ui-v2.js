@@ -82,7 +82,7 @@ function install(Renderer){const p=Renderer.prototype;
  p.profileScene=function(){old.profileScene.call(this);if(!this.runtime.loginBusy&&!this.runtime._privacyBusy){const b=this.profileButtonRect();this.v2Art('v2_profile_authorize_button',b.x,b.y,b.w,b.h);}};
  // The generated reference contains a matte outside the plaque. Canvas clips the
  // illustrated outline before drawing; no matte/checker pixels enter the scene.
- p.matchTitleFrame=function(x,y,w,h){const im=this.uiImage('match_title_frame');if(!im)return false;const c=this.ctx;c.save();c.translate(x,y);c.scale(w/2057,h/764);c.beginPath();
+ p.matchTitleFrame=function(x,y,w,h){const im=this.uiImage('match_info_frame');if(!im)return false;const c=this.ctx;c.save();c.translate(x,y);c.scale(w/2057,h/764);c.beginPath();
  c.moveTo(268,169);c.lineTo(1777,169);c.bezierCurveTo(1841,169,1881,194,1905,257);c.bezierCurveTo(1970,274,1994,302,2008,361);c.lineTo(2020,389);c.lineTo(2008,424);c.bezierCurveTo(1995,473,1970,500,1908,520);c.bezierCurveTo(1884,574,1847,599,1793,600);c.lineTo(248,600);c.bezierCurveTo(194,600,161,578,145,528);c.bezierCurveTo(85,514,58,479,47,432);c.lineTo(41,390);c.lineTo(54,352);c.bezierCurveTo(65,306,88,279,145,261);c.bezierCurveTo(166,205,201,173,268,169);c.closePath();
  // Leaves are separate contours, safely inside the illustrated edges.
  c.moveTo(211,89);c.bezierCurveTo(184,110,175,142,185,177);c.lineTo(239,167);c.bezierCurveTo(254,141,245,111,211,89);c.closePath();
@@ -153,7 +153,7 @@ function install(Renderer){const p=Renderer.prototype;
  return previousBattleCard.call(this,x,y,w,h,fill,stroke);};
  // Cache the reference silhouette at its native resolution, keeping the bevel intact.
  p.battleTitleArt=function(x,y,w,h,originalLabel){
-  const im=this.uiImage('match_title_frame');
+  const im=this.uiImage('match_info_frame');
   if(!im)return false;
   // The supplied wooden plaque is drawn at the requested fixed 173x55 header size.
   const c=this.ctx;c.save();
@@ -191,7 +191,7 @@ function install(Renderer){const p=Renderer.prototype;
  p.inferenceAssumptionSheet=function(controller){
  const opts=this.runtime.controller.data.inferenceAssumptionOptions||[],rows=Math.ceil(opts.length/2),h=86+rows*38+48,y=Math.max(this.top+18,(this.height-h)/2);this.overlay('rgba(47,36,28,.74)');this.card(27,y,321,h,'rgba(255,247,231,.78)','#e6c58d');this.text('选择假设身份',187.5,y+30,20,'#74512d','center',true);this.text('仅用于推理，不代表正式棋局已揭示',187.5,y+57,11,'#8f7354','center');opts.forEach((o,i)=>{const x=44+(i%2)*145,yy=y+78+Math.floor(i/2)*38;this.card(x,yy,133,32,'#fff1cf','#d3a05a');this.text(o.label,x+66.5,yy+16,14,o.side==='red'?'#c52d21':'#252525','center',true);this.targets.push({x,y:yy,w:133,h:32,action:()=>controller.chooseInferenceAssumption(o.side,o.kind)});});this.button('取消选择',135,y+h-48,105,46,()=>controller.cancelInferenceAssumption(),true);
  };
- p.preloadGameAssets=function(){if(this._v2Loading)return this._v2Loading;const a=require('./ui-assets'),keys=['extra_buttons','waiting_reference','waiting_button','inference_button','pause_button_blank','result_reference','game_reference','match_title_frame','board_base','capture_ring',...Object.keys(meta).filter(k=>((k.startsWith('v2_piece_')||k.startsWith('v2_fusion_'))&&!k.endsWith('_selected'))||k.startsWith('v2_player_bar_')||k.startsWith('v2_avatar_')||/^v2_button_00[5-9]$/.test(k)||k==='v2_button_010')];
+ p.preloadGameAssets=function(){if(this._v2Loading)return this._v2Loading;const a=require('./ui-assets'),keys=['extra_buttons','waiting_reference','waiting_button','inference_button','pause_button_blank','result_reference','game_reference','match_info_frame','board_base','capture_ring',...Object.keys(meta).filter(k=>((k.startsWith('v2_piece_')||k.startsWith('v2_fusion_'))&&!k.endsWith('_selected'))||k.startsWith('v2_player_bar_')||k.startsWith('v2_avatar_')||/^v2_button_00[5-9]$/.test(k)||k==='v2_button_010')];
  const pkgs=[...new Set(keys.map(k=>a[k].split('/')[0]))];this.uiPackages=this.uiPackages||{};
  this._v2Loading=Promise.all(pkgs.map(name=>new Promise(resolve=>{if(this.uiPackages[name]==='ready')return resolve(true);this.uiPackages[name]='loading';const done=ok=>{this.uiPackages[name]=ok?'ready':'failed';resolve(ok);};if(!wx.loadSubpackage)return done(true);try{wx.loadSubpackage({name,success:()=>done(true),fail:()=>done(false)});}catch(e){done(false);}}))).then(async results=>{const images=await Promise.all(keys.map(k=>{this.uiImage(k);const rec=this.images.get(a[k]);return rec&&(rec.image?true:rec.ready)||false;}));FX.preload(this);this.invalidate();return results.every(Boolean)&&images.every(Boolean);}).finally(()=>{this._v2Loading=null;});return this._v2Loading;
  };
